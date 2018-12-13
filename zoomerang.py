@@ -150,7 +150,7 @@ if __name__ == "__main__":
     rss_content = f"""
 <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
 <channel>
-<atom:link href="http://www.abc.net.au/radio/programs/the-signal/feed/9443166/podcast.xml" rel="self" type="application/xml"/>
+<atom:link href="{zoomerang_url}/podcast.xml" rel="self" type="application/xml"/>
 <title>Zoomerang</title>
 <itunes:subtitle>Sleep is important. So is work.</itunes:subtitle>
 <description>
@@ -163,10 +163,10 @@ Your sleep is important, and Australia's time zone sucks. Zoomerang records the 
 <language>en</language>
 <image>
 <title>Zoomerang</title>
-<url>http://www.abc.net.au/cm/rimage/9446470-1x1-thumbnail.jpg?v=4</url>
+<url>https://d1u5p3l4wpay3k.cloudfront.net/arksurvivalevolved_gamepedia/1/17/Boomerang_%28Scorched_Earth%29.png</url>
 <link>{zoomerang_url}</link>
 </image>
-<itunes:image href="http://www.abc.net.au/cm/rimage/9446470-1x1-large.jpg?v=4"/>
+<itunes:image href="https://d1u5p3l4wpay3k.cloudfront.net/arksurvivalevolved_gamepedia/1/17/Boomerang_%28Scorched_Earth%29.png"/>
 <itunes:author>Andy Casey</itunes:author>
 <itunes:owner>
 <itunes:name>Andy Casey</itunes:name>
