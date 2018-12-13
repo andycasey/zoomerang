@@ -82,7 +82,7 @@ if __name__ == "__main__":
         summary = sys.argv[2:]
 
     # Prepare the output path.
-    recordings_dir_path = os.path.join(dir_path, "recordings")
+    recordings_dir_path = "/var/www/html/recordings/"
     os.makedirs(recordings_dir_path, exist_ok=True)
 
     now = datetime.datetime.now().isoformat()
