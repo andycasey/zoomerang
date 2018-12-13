@@ -124,6 +124,7 @@ if __name__ == "__main__":
 
     # Update the RSS feed.
     # TODO
-
-    print("Complete")
+    print(meta)
+    
+    print("Complete:")
 

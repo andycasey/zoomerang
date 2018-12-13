@@ -49,7 +49,7 @@ def format_cron_job(zoomerang_event):
 
     st = datetime.datetime.strptime(start_datetime, "%Y-%m-%dT%H:%M:%S%z")
 
-    return f"{st.minute} {st.hour} {st.day} {st.month} * python /home/ubuntu/zoomerang/zoomerang.py {meeting_id} \"{summary}\""
+    return f"{st.minute} {st.hour} {st.day} {st.month} * python /home/ubuntu/zoomerang/zoomerang.py {meeting_id} \"{summary}\" >> /home/ubuntu/zoomerang/zoomerang.log 2>&1"
 
 
 
