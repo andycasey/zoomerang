@@ -44,7 +44,7 @@ def format_cron_job(zoomerang_event):
     start_datetime = zoomerang_events[0]["start"]["dateTime"]
     start_datetime = ":".join(start_datetime.split(":")[:-1]) \
                    + start_datetime[-2:]
-    args = zoomerang_event["location"].split()[1:]
+    args = " ".join(zoomerang_event["location"].split()[1:])
     summary = zoomerang_event.get("summary", "").replace('"', '')
 
     st = datetime.datetime.strptime(start_datetime, "%Y-%m-%dT%H:%M:%S%z")
