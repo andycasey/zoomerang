@@ -144,7 +144,10 @@ if __name__ == "__main__":
     # TODO
     print(meta)
 
-    rss_content = """
+    zoomerang_url = config["zoomerang_url"]
+
+
+    rss_content = f"""
 <rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
 <channel>
 <atom:link href="http://www.abc.net.au/radio/programs/the-signal/feed/9443166/podcast.xml" rel="self" type="application/xml"/>
@@ -155,13 +158,13 @@ if __name__ == "__main__":
 Your sleep is important, and Australia's time zone sucks. Zoomerang records the scheduled telecons that you slept through.
 ]]>
 </description>
-<link>http://115.146.92.32/</link>
+<link>{zoomerang_url}</link>
 <copyright></copyright>
 <language>en</language>
 <image>
 <title>Zoomerang</title>
 <url>http://www.abc.net.au/cm/rimage/9446470-1x1-thumbnail.jpg?v=4</url>
-<link>http://115.146.92.32/</link>
+<link>{zoomerang_url}</link>
 </image>
 <itunes:image href="http://www.abc.net.au/cm/rimage/9446470-1x1-large.jpg?v=4"/>
 <itunes:author>Andy Casey</itunes:author>
@@ -172,10 +175,9 @@ Your sleep is important, and Australia's time zone sucks. Zoomerang records the 
 <itunes:summary>
 Your sleep is important, and Australia's time zone sucks. Zoomerang records the scheduled telecons that you slept through.
 </itunes:summary>
-<programarid>ppmp2NQN7y</programarid>
-<itunes:category text="News & Politics"/>
+<itunes:category text="News"/>
 <itunes:explicit>no</itunes:explicit>
-<lastBuildDate>Fri, 07 Dec 2018 04:00:00 +1100</lastBuildDate>"""
+<lastBuildDate>{now}</lastBuildDate>"""
     
     rss_item_template = """
 <item>
@@ -208,8 +210,6 @@ Your sleep is important, and Australia's time zone sucks. Zoomerang records the 
 
     metadata_paths = glob(f"{recordings_dir_path}*.yaml")
 
-    url = config["zoomerang_url"]
-
     for metadata_path in metadata_paths:
         with open(metadata_path, "r") as fp:
             meta = yaml.load(fp)
@@ -219,16 +219,16 @@ Your sleep is important, and Australia's time zone sucks. Zoomerang records the 
                                                 subtitle="",
                                                 description="",
                                                 publication_date=meta["start_datetime"],
-                                                link=f"{url}",
-                                                audio_url="{url}/recordings/{basename}",
+                                                link=f"{zoomerang_url}",
+                                                audio_url=f"{zoomerang_url}/recordings/{basename}",
                                                 audio_file_size=os.path.getsize(meta["audio_path"]),
-                                                duration="{0}:{1}".format(meta["duration"]/60, meta["duration"] % 60),
+                                                duration="{0}:{1}".format(meta.get("duration", 0)/60, meta.get("duration", 0) % 60),
                                                 media_description="")
 
     rss_content += "</channel></rss>"
 
     with open("/var/www/html/podcast.xml", "w") as fp:
-        fp.write(rss_content)
+        fp.write(rss_content.strip())
 
     print("Updated podcast")
 
