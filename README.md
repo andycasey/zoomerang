@@ -6,8 +6,11 @@ Because my sleep is important and Australia's time zone *sucks*.
 Scheduler
 ---------
 
-The Scheduler looks through my Google Calendar for upcoming Zoom meetings that I want Zoomerang to record,
-and schedules a `cron` job to record the meeting. It's a good idea to run the Scheduler at 23:59 on Sundays.
+The Scheduler looks through my Google Calendar for upcoming Zoom meetings that I want Zoomerang to record
+(by setting 'Zoomerang <MEETING_ID>' as the location), then schedules a `cron` job to record that meeting.
+It's a good idea to run the Scheduler at 23:59 on a Sunday, then it will schedule all your Zoomerangs for
+the upcoming week.
+
 The following `cron` job will do that for you:
 
 ``59 23 * * 6 python scheduler.py``
