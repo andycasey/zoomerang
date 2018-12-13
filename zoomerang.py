@@ -91,7 +91,7 @@ if __name__ == "__main__":
     parser.add_argument("meeting_id", type=int)
     parser.add_argument("summary", type=str,
                         help="a description of the meeting purpose")
-    parser.add_argument("--phone_number", nargs=1, type=str, default=None,
+    parser.add_argument("--phone-number", nargs=1, type=str, default=None,
                         help="the call number to use (defaults to Zoom)")
     parser.add_argument("--duration", nargs=1, type=int, default=60,
                         help="the expected meeting duration (in minutes)")
