@@ -49,16 +49,18 @@ def format_cron_job(zoomerang_event):
 
     st = datetime.datetime.strptime(start_datetime, "%Y-%m-%dT%H:%M:%S%z")
 
-    return f"{st.minute} {st.hour} {st.day} {st.month} * python zoomerang.py {meeting_id} \"{summary}\""
+    return f"{st.minute} {st.hour} {st.day} {st.month} * python /home/ubuntu/zoomerang/zoomerang.py {meeting_id} \"{summary}\""
 
 
 
 if __name__ == '__main__':
 
     zoomerang_events = find_upcoming_zoomerang_events(get_calendar())
+    cron_prefix = "SHELL=/bin/sh\nPATH=/home/ubuntu/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n"
+
     cron_jobs = "\n".join([format_cron_job(e) for e in zoomerang_events]) + "\n"
 
     #/etc/cron.d/zoomerang
-    with open("zoomerang", "w") as fp:
-        fp.write(cron_jobs)
+    with open("/etc/cron.d/zoomerang", "w") as fp:
+        fp.write(cron_prefix + cron_jobs)
 
