@@ -1,6 +1,7 @@
 
 import os
 import pwd
+import grp
 import datetime
 
 from googleapiclient.discovery import build
@@ -10,11 +11,13 @@ from httplib2 import Http
 
 def get_calendar():
     
-    store = file.Storage('token.json')
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+
+    store = file.Storage(os.path.join(dir_path, "token.json"))
     creds = store.get()
     if not creds or creds.invalid:
         flow = client.flow_from_clientsecrets(
-            'credentials.json', 
+            os.path.join(dir_path, "credentials.json"),
             'https://www.googleapis.com/auth/calendar.readonly')
         creds = tools.run_flow(flow, store)
     return build('calendar', 'v3', http=creds.authorize(Http()))
@@ -73,13 +76,20 @@ def format_cron_jobs(zoomerang_events, environment_variables=("SHELL", "PATH")):
 
 if __name__ == '__main__':
 
-    print(f"Found {len(zoomerang_events)} events: {zoomerang_events}")
-
     zoomerang_events = find_upcoming_zoomerang_events(get_calendar())
 
     content = format_cron_jobs(zoomerang_events)
 
     #/etc/cron.d/zoomerang
-    with open("/etc/cron.d/zoomerang", "w") as fp:
+    cron_path = "/etc/cron.d/zoomerang"
+    with open(cron_path, "w") as fp:
         fp.write(content)
+
+    # Ensure correct permissions, etc.
+    os.chmod(cron_path, 600)
+    os.chown(cron_path, pwd.getpwnam("root").pw_uid, grp.getgrnam("root").gr_gid)
+
+    # Ensure cron jobs will run.
+    os.system(f"touch {os.path.dirname(cron_path)}")
+    os.system("sudo service cron restart")
 
