@@ -10,4 +10,8 @@ sudo apt-get install nginx
 sudo ufw allow 'Nginx HTTP'
 systemctl status nginx
 sudo chown -R ubuntu:ubuntu /var/www/html/
+# Set the time zone correctly
+sudo dpkg-reconfigure tzdata
+
 # Now install crontab for scheduler
+cp zoomerang/scripts/zoomerang-scheduler /etc/cron.d/zoomerang-scheduler

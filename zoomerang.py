@@ -9,15 +9,15 @@ import requests
 import yaml
 from glob import glob
 from time import sleep
+from urllib import parse
+
+import dateutil.parser
 from twilio.rest import Client
+from podgen import Podcast, Episode, Media
 
-# Load configuration file.
-dir_path = os.path.dirname(os.path.realpath(__file__))
-with open(os.path.join(dir_path, "zoomerang.yaml")) as fp:
-    config = yaml.load(fp)
-
-def record_meeting(meeting_id, duration=3600, phone_number=None,
-                   full_output=False):
+def record_meeting(twilio_account_sid, twilio_auth_token, twilio_phone_number,
+                   meeting_id, summary=None, conference_phone_number=None, 
+                   duration=3600, full_output=False):
     """
     Make an audio recording of a meeting (e.g., a Zoom meeting), and return a 
     URL where the recording can be directly accessed.
@@ -28,7 +28,7 @@ def record_meeting(meeting_id, duration=3600, phone_number=None,
     :param duration: [optional]
         The expected meeting duration (in seconds). This defaults to one hour.
 
-    :param phone_number: [optional]
+    :param conference_phone_number: [optional]
         The conference call number. If `None` is provided then the meeting is
         assumed to be a Zoom meeting.
 
@@ -50,16 +50,13 @@ def record_meeting(meeting_id, duration=3600, phone_number=None,
     </Response>
     """.strip()
 
-    if phone_number is None:
-        phone_number = config["zoom_phone_number"]
-
     call_url = requests.Request("GET", "http://twimlets.com/echo",
                                 params=dict(Twiml=TwiML)).prepare().url
 
     # Call in and record.
-    client = Client(config["twilio_account_sid"], config["twilio_auth_token"])
-    call = client.calls.create(to=phone_number,
-                               from_=config["twilio_phone_number"],
+    client = Client(twilio_account_sid, twilio_auth_token)
+    call = client.calls.create(to=conference_phone_number,
+                               from_=twilio_phone_number,
                                send_digits=f"{meeting_id}#",
                                record=True,
                                url=call_url)
@@ -77,10 +74,24 @@ def record_meeting(meeting_id, duration=3600, phone_number=None,
 
     url = "https://api.twilio.com{0}.mp3".format(recording.uri[:-5])
 
-    if full_output:
-        return (url, call, recording)
+    # Twilio MP3s have a rate of 32 kilobits per second.
+    estimated_file_size = int((int(recording.duration) * 32) / 8 * 1000)
 
-    return url
+    metadata = dict(summary=summary,
+                    meeting_id=meeting_id,
+                    conference_phone_number=conference_phone_number,
+                    url=url,
+                    duration=int(recording.duration),
+                    start_datetime=recording.start_time.isoformat(),
+                    created_datetime=recording.date_created.isoformat(),
+                    price=float(recording.price),
+                    price_unit=recording.price_unit,
+                    estimated_file_size=estimated_file_size)
+
+    if full_output:
+        return (metadata, call, recording)
+
+    return metadata
 
 
 
@@ -88,147 +99,70 @@ if __name__ == "__main__":
 
     import argparse
 
+    # Load config.
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    with open(os.path.join(dir_path, "zoomerang.yaml")) as fp:
+        config = yaml.load(fp)
+
     parser = argparse.ArgumentParser(description="Record a scheduled meeting")
     parser.add_argument("meeting_id", type=int)
     parser.add_argument("summary", type=str,
                         help="a description of the meeting purpose")
-    parser.add_argument("--phone-number", nargs=1, type=str, default=None,
+    parser.add_argument("--phone-number", nargs=1, type=str, 
+                        default=config["zoom_phone_number"],
                         help="the call number to use (defaults to Zoom)")
     parser.add_argument("--duration", type=int, default=60,
                         help="the expected meeting duration (in minutes)")
 
     args = parser.parse_args()
 
-    
+
     # Prepare the output path.
-    recordings_dir_path = "/var/www/html/recordings/"
+    recordings_dir_path = config["recordings_local_path"]
     os.makedirs(recordings_dir_path, exist_ok=True)
 
     now = datetime.datetime.now().isoformat()
     output_prefix = os.path.join(recordings_dir_path, f"{now}-{args.meeting_id}")
 
-    # Get the URL of the recording for the given meeting.
     print(f"Recording meeting ID {args.meeting_id} (tel: {args.phone_number} "\
-          f"for up to {args.duration} minutes")
+          f"for up to {args.duration} minutes)")
 
-    url, call, recording = record_meeting(args.meeting_id,
-                                          duration=60*args.duration,
-                                          phone_number=args.phone_number,
-                                          full_output=True)
+    # Get the URL of the recording for the given meeting.
+    meeting = record_meeting(config["twilio_account_sid"], 
+                             config["twilio_auth_token"],
+                             config["twilio_phone_number"],
+                             args.meeting_id,
+                             conference_phone_number=args.phone_number,
+                             duration=60 * args.duration,
+                             summary=args.summary)
 
-    print(f"Call complete. Retrieving audio from {url}")
+    print(f"Call complete. Response: {meeting}")
 
-    # Download the recording.
-    while True:
-        r = requests.get(url)
-        if not r.ok:
-            print("Request failed. Waiting and trying again.")
-            sleep(10)
-
-        break
-
-    with open(f"{output_prefix}.mp3", "wb") as fp:
-        fp.write(r.content)
-
-    meta = dict(meeting_id=args.meeting_id,
-                summary=args.summary,
-                start_datetime=now,
-                duration=args.duration,
-                phone_number=args.phone_number,
-                audio_path=f"{output_prefix}.mp3")
-
+    # Save the meeting details.
     with open(f"{output_prefix}.yaml", "w") as fp:
-        fp.write(yaml.dump(meta))
+        fp.write(yaml.dump(meeting))
 
-    # Update the RSS feed.
-    # TODO
-    print(meta)
+    # Update podcast.
+    podcast = Podcast(name="Zoomerang",
+                      description="Telecons you missed while you were sleeping.",
+                      website=config["zoomerang_remote_addr"],
+                      explicit=False)
 
-    zoomerang_url = config["zoomerang_url"]
+    meeting_paths = glob(f"{recordings_dir_path}*.yaml")
+    for meeting_path in meeting_paths:
+        with open(meeting_path, "r") as fp:
+            meeting = yaml.load(fp)
 
+        podcast.add_episode(Episode(
+            title=meeting["summary"],
+            media=Media(meeting["url"], 
+                        size=meeting["estimated_file_size"],
+                        type="audio/mpeg",
+                        duration=datetime.timedelta(seconds=meeting["duration"])),
+            publication_date=dateutil.parser.parse(meeting["created_datetime"])))
 
-    rss_content = f"""
-<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
-<channel>
-<atom:link href="{zoomerang_url}/podcast.xml" rel="self" type="application/xml"/>
-<title>Zoomerang</title>
-<itunes:subtitle>Sleep is important. So is work.</itunes:subtitle>
-<description>
-<![CDATA[
-Your sleep is important, and Australia's time zone sucks. Zoomerang records the scheduled telecons that you slept through.
-]]>
-</description>
-<link>{zoomerang_url}</link>
-<copyright></copyright>
-<language>en</language>
-<image>
-<title>Zoomerang</title>
-<url>https://d1u5p3l4wpay3k.cloudfront.net/arksurvivalevolved_gamepedia/1/17/Boomerang_%28Scorched_Earth%29.png</url>
-<link>{zoomerang_url}</link>
-</image>
-<itunes:image href="https://d1u5p3l4wpay3k.cloudfront.net/arksurvivalevolved_gamepedia/1/17/Boomerang_%28Scorched_Earth%29.png"/>
-<itunes:author>Andy Casey</itunes:author>
-<itunes:owner>
-<itunes:name>Andy Casey</itunes:name>
-<itunes:email>andrew.casey@monash.edu</itunes:email>
-</itunes:owner>
-<itunes:summary>
-Your sleep is important, and Australia's time zone sucks. Zoomerang records the scheduled telecons that you slept through.
-</itunes:summary>
-<itunes:category text="News"/>
-<itunes:explicit>no</itunes:explicit>
-<lastBuildDate>{now}</lastBuildDate>"""
-    
-    rss_item_template = """
-<item>
-<title>{title}</title>
-<itunes:subtitle>
-{subtitle}
-</itunes:subtitle>
-<description>
-<![CDATA[
-{description}
-]]>
-</description>
-<link>
-{link}
-</link>
-<enclosure url="{audio_url}" type="audio/mp3" length="{audio_file_size}"/>
-<pubDate>{publication_date}</pubDate>
-<guid isPermaLink="true">
-{link}
-</guid>
-<itunes:duration>{duration}</itunes:duration>
-<itunes:keywords></itunes:keywords>
-<media:content url="{audio_url}" type="audio/mp3" fileSize="{audio_file_size}" medium="audio" expression="full" duration="{duration}"/>
-<media:group>
-<media:description>
-{media_description}
-</media:description>
-</media:group>
-</item>"""
+    with open(config["zoomerang_podcast_path"], "w") as fp:
+        fp.write(podcast)
 
-    metadata_paths = glob(f"{recordings_dir_path}*.yaml")
-
-    for metadata_path in metadata_paths:
-        with open(metadata_path, "r") as fp:
-            meta = yaml.load(fp)
-
-        basename = os.path.basename(meta["audio_path"])
-        rss_content += rss_item_template.format(title=meta["summary"],
-                                                subtitle="",
-                                                description="",
-                                                publication_date=meta["start_datetime"],
-                                                link=f"{zoomerang_url}",
-                                                audio_url=f"{zoomerang_url}/recordings/{basename}",
-                                                audio_file_size=os.path.getsize(meta["audio_path"]),
-                                                duration="{0}:{1}".format(meta.get("duration", 0)/60, meta.get("duration", 0) % 60),
-                                                media_description="")
-
-    rss_content += "</channel></rss>"
-
-    with open("/var/www/html/podcast.xml", "w") as fp:
-        fp.write(rss_content.strip())
-
-    print("Updated podcast")
+    print("Updated podcast.")
 

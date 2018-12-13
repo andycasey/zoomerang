@@ -1,0 +1,6 @@
+.gitignore
+*.yaml
+*.json
+*.mp3
+connect.sh
+*.xml
