@@ -7,6 +7,7 @@ import datetime
 import os
 import requests
 import yaml
+from time import sleep
 from twilio.rest import Client
 
 # Load configuration file.
@@ -14,7 +15,7 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 with open(os.path.join(dir_path, "zoomerang.yaml")) as fp:
     config = yaml.load(fp)
 
-def record_zoom_meeting(meeting_id, meeting_duration=3600, full_output=False):
+def record_zoom_meeting(meeting_id, meeting_duration=120, full_output=False):
     """
     Make an audio recording of a Zoom meeting, and return a URL where the
     recording can be directly accessed.
@@ -54,7 +55,16 @@ def record_zoom_meeting(meeting_id, meeting_duration=3600, full_output=False):
                                record=True,
                                url=call_url)
 
-    recording = call.recordings.list()[0]
+    # Now we wait. Give an extra 60 seconds for connection, processing, etc.
+    sleep(meeting_duration)
+    while True:
+        recordings = call.recordings.list()
+        if len(recordings) < 1:
+            sleep(10)
+        else:
+            recording = recordings[0]
+            break
+
     url = "https://api.twilio.com{0}.mp3".format(recording.uri[:-5])
 
     if full_output:
