@@ -68,13 +68,15 @@ def format_cron_jobs(zoomerang_events, environment_variables=("SHELL", "PATH")):
 
     cron_jobs = [format_cron_job(ev) for ev in zoomerang_events]
 
-    return cron_prefix + "\n" + "\n".join(cron_jobs) + "\n"
+    return cron_prefix + "\n\n" + "\n".join(cron_jobs) + "\n\n"
 
 
 if __name__ == '__main__':
 
+    print(f"Found {len(zoomerang_events)} events: {zoomerang_events}")
+
     zoomerang_events = find_upcoming_zoomerang_events(get_calendar())
-    
+
     content = format_cron_jobs(zoomerang_events)
 
     #/etc/cron.d/zoomerang
