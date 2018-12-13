@@ -56,7 +56,8 @@ def record_zoom_meeting(meeting_id, meeting_duration=120, full_output=False):
                                url=call_url)
 
     # Now we wait. Give an extra 60 seconds for connection, processing, etc.
-    sleep(meeting_duration)
+    sleep(meeting_duration + 60)
+
     while True:
         recordings = call.recordings.list()
         if len(recordings) < 1:
@@ -85,7 +86,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 2:
         summary = f"Meeting {meeting_id}"
     else:
-        summary = sys.argv[2:]
+        summary = sys.argv[2]
 
     # Prepare the output path.
     recordings_dir_path = "/var/www/html/recordings/"
@@ -96,12 +97,19 @@ if __name__ == "__main__":
 
 
     # Get the URL of the recording for the given meeting.
+    print(f"Recording Zoom meeting {meeting_id}")
     url, call, recording = record_zoom_meeting(meeting_id, full_output=True)
 
+    print(f"Retrieving audio from {url}")
+
     # Download the recording.
-    r = requests.get(url)
-    if not r.ok:
-        r.raise_for_status()
+    while True:
+        r = requests.get(url)
+        if not r.ok:
+            print("Request failed. Waiting and trying again.")
+            sleep(10)
+
+        break
 
     with open(f"{output_prefix}.mp3", "wb") as fp:
         fp.write(r.content)
@@ -111,11 +119,11 @@ if __name__ == "__main__":
                 start_datetime=now,
                 audio_path=f"{output_prefix}.mp3")
 
-    with open(f"{output_path}.yaml", "w") as fp:
-        fp.write(yaml.dumps(meta))
+    with open(f"{output_prefix}.yaml", "w") as fp:
+        fp.write(yaml.dump(meta))
 
     # Update the RSS feed.
     # TODO
 
-    print("Done")
+    print("Complete")
 
