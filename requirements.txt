@@ -1,5 +1,5 @@
 requests
-yaml
+pyyaml
 twilio
 google-api-python-client
 oauth2client
