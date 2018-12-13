@@ -1,0 +1,107 @@
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
+<channel>
+<atom:link href="http://www.abc.net.au/radio/programs/the-signal/feed/9443166/podcast.xml" rel="self" type="application/xml"/>
+<title>The Signal</title>
+<itunes:subtitle>
+Sometimes the news can feel overwhelming. But The Signal is here to sort the news from the noise. It's your smart and sceptical dive into the stories that matter, delivered straight to your favourite podcast app every morning.
+</itunes:subtitle>
+<description>
+<![CDATA[
+Sometimes the news can feel overwhelming. But The Signal is here to sort the news from the noise. It's your smart and sceptical dive into the stories that matter, delivered straight to your favourite podcast app every morning.
+]]>
+</description>
+<link>http://www.abc.net.au/radio/programs/the-signal/</link>
+<copyright>
+Copyright 2018, Australian Broadcasting Corporation. All Rights Reserved.
+</copyright>
+<language>en</language>
+<image>
+<title>The Signal</title>
+<url>
+http://www.abc.net.au/cm/rimage/9446470-1x1-thumbnail.jpg?v=4
+</url>
+<link>http://www.abc.net.au/radio/programs/the-signal/</link>
+</image>
+<itunes:image href="http://www.abc.net.au/cm/rimage/9446470-1x1-large.jpg?v=4"/>
+<itunes:author>ABC Radio</itunes:author>
+<itunes:owner>
+<itunes:name>ABC Radio</itunes:name>
+<itunes:email>localfeedback@your.abc.net.au</itunes:email>
+</itunes:owner>
+<itunes:summary>
+Sometimes the news can feel overwhelming. But The Signal is here to sort the news from the noise. It's your smart and sceptical dive into the stories that matter, delivered straight to your favourite podcast app every morning.
+</itunes:summary>
+<programarid>ppmp2NQN7y</programarid>
+<itunes:category text="News & Politics"/>
+<itunes:explicit>no</itunes:explicit>
+<lastBuildDate>Fri, 07 Dec 2018 04:00:00 +1100</lastBuildDate>
+<item>
+<title>2018: what just happened?</title>
+<itunes:subtitle>
+You made it! We made it! It's nearly the end of 2018! Today is The Signal's last episode for the year, but fear not: we promise to be back in your podcast feed early next year, trying to make sense of the news each weekday. In our last episode of 2018, we're doing something a little different: we're going to chat about the key turning points of the year, try to tease out what we learnt and what changed, and see if we can make any predictions about the new year ahead. And just in case you're looking: here's a list of episodes we reference in today's show: https://www.abc.net.au/radio/programs/the-signal/the-climate-change-tipping-points/10502528 https://www.abc.net.au/radio/programs/the-signal/quitting-coal/10357202 https://www.abc.net.au/radio/programs/the-signal/are-scott-morrisons-videos-working/10475182 https://www.abc.net.au/radio/programs/the-signal/inside-a-political-makeover/10157922 https://www.abc.net.au/radio/programs/the-signal/a-leadership-spill-a-story-in-seven-parts/10153574 https://www.abc.net.au/radio/programs/the-signal/can-you-smash-away-your-rage/9920648 https://www.abc.net.au/radio/programs/the-signal/is-the-anthem-fair/10244206 If you've enjoyed The Signal this year, please get in touch: our email is thesignal@abc.net.au And as we say all the time, please let your mates know we exist, and write us a quick review on iTunes to help other people find the show. Enjoy the Christmas and summer break if you have time off, and stay tuned for our first ep of the new year, coming out on January 21.
+</itunes:subtitle>
+<description>
+<![CDATA[
+You made it! We made it! It's nearly the end of 2018! Today is The Signal's last episode for the year, but fear not: we promise to be back in your podcast feed early next year, trying to make sense of the news each weekday. In our last episode of 2018, we're doing something a little different: we're going to chat about the key turning points of the year, try to tease out what we learnt and what changed, and see if we can make any predictions about the new year ahead. And just in case you're looking: here's a list of episodes we reference in today's show: https://www.abc.net.au/radio/programs/the-signal/the-climate-change-tipping-points/10502528 https://www.abc.net.au/radio/programs/the-signal/quitting-coal/10357202 https://www.abc.net.au/radio/programs/the-signal/are-scott-morrisons-videos-working/10475182 https://www.abc.net.au/radio/programs/the-signal/inside-a-political-makeover/10157922 https://www.abc.net.au/radio/programs/the-signal/a-leadership-spill-a-story-in-seven-parts/10153574 https://www.abc.net.au/radio/programs/the-signal/can-you-smash-away-your-rage/9920648 https://www.abc.net.au/radio/programs/the-signal/is-the-anthem-fair/10244206 If you've enjoyed The Signal this year, please get in touch: our email is thesignal@abc.net.au And as we say all the time, please let your mates know we exist, and write us a quick review on iTunes to help other people find the show. Enjoy the Christmas and summer break if you have time off, and stay tuned for our first ep of the new year, coming out on January 21.
+]]>
+</description>
+<link>
+http://www.abc.net.au/radio/programs/the-signal/2018-what-just-happened/10591622
+</link>
+<enclosure url="http://mpegmedia.abc.net.au/news/audio/podcast/thesignal/tsg-2018-12-07-episode203-what-changed-in-2018.mp3" type="audio/mp3" length="17158656"/>
+<pubDate>Fri, 07 Dec 2018 04:00:00 +1100</pubDate>
+<guid isPermaLink="true">
+http://www.abc.net.au/radio/programs/the-signal/2018-what-just-happened/10591622
+</guid>
+<itunes:duration>17:52</itunes:duration>
+<itunes:keywords>the signal, abc podcasts, 2018, final episode</itunes:keywords>
+<media:content url="http://mpegmedia.abc.net.au/news/audio/podcast/thesignal/tsg-2018-12-07-episode203-what-changed-in-2018.mp3" type="audio/mp3" fileSize="17158656" medium="audio" expression="full" duration="17:52"/>
+<media:group>
+<media:description>
+Hosts of ABC podcast, The Signal, Angela Lavoipierre and Stephen Smiley
+</media:description>
+<media:content url="http://www.abc.net.au/cm/rimage/10591808-16x9-large.jpg?v=2" medium="image" type="image/jpeg"/>
+<media:content url="http://www.abc.net.au/cm/rimage/10591808-4x3-large.jpg?v=2" medium="image" type="image/jpeg"/>
+<media:content url="http://www.abc.net.au/cm/rimage/10591808-3x2-large.jpg?v=2" medium="image" type="image/jpeg"/>
+<media:content url="http://www.abc.net.au/cm/rimage/10591808-3x4-large.jpg?v=2" medium="image" type="image/jpeg"/>
+<media:content url="http://www.abc.net.au/cm/rimage/10591808-1x1-large.jpg?v=2" medium="image" type="image/jpeg"/>
+<media:thumbnail url="http://www.abc.net.au/cm/rimage/10591808-4x3-thumbnail.jpg?v=2"/>
+</media:group>
+</item>
+<item>
+<title>He gene-edited babies. Now he's disappeared.</title>
+<itunes:subtitle>
+Last week, the scientific world was understandably rocked by news that genetically-edited twin girls had been born in China following a highly controversial experiment apparently carried out by a rogue researcher. Now the story has become even stranger, with reports surfacing yesterday suggesting the geneticist in question, He Jiankui, is now missing and rumoured to be in custody. So just what may have happened to He Jiankui? And why has China's official reaction to the news of his research shifted dramatically in a week, from praise to condemnation? Today on The Signal, we try to get to the bottom of one of the biggest scandals to shake science in decades. We speak with Hong Kong-based science reporter at The South China Morning Post Alice Shen, and catch up with science reporter at ABC Radio National Belinda Smith.
+</itunes:subtitle>
+<description>
+<![CDATA[
+Last week, the scientific world was understandably rocked by news that genetically-edited twin girls had been born in China following a highly controversial experiment apparently carried out by a rogue researcher. Now the story has become even stranger, with reports surfacing yesterday suggesting the geneticist in question, He Jiankui, is now missing and rumoured to be in custody. So just what may have happened to He Jiankui? And why has China's official reaction to the news of his research shifted dramatically in a week, from praise to condemnation? Today on The Signal, we try to get to the bottom of one of the biggest scandals to shake science in decades. We speak with Hong Kong-based science reporter at The South China Morning Post Alice Shen, and catch up with science reporter at ABC Radio National Belinda Smith.
+]]>
+</description>
+<link>
+http://www.abc.net.au/radio/programs/the-signal/he-gene-edited-babies-now-hes-disappeared/10587324
+</link>
+<enclosure url="http://mpegmedia.abc.net.au/news/audio/podcast/thesignal/tsg-2018-12-06-episode202-gene-crispr-disappearance.mp3" type="audio/mp3" length="13687680"/>
+<pubDate>Thu, 06 Dec 2018 04:00:00 +1100</pubDate>
+<guid isPermaLink="true">
+http://www.abc.net.au/radio/programs/the-signal/he-gene-edited-babies-now-hes-disappeared/10587324
+</guid>
+<itunes:duration>14:15</itunes:duration>
+<itunes:keywords>
+the signal, abc podcasts, news, he jiankui, china, crispr
+</itunes:keywords>
+<media:content url="http://mpegmedia.abc.net.au/news/audio/podcast/thesignal/tsg-2018-12-06-episode202-gene-crispr-disappearance.mp3" type="audio/mp3" fileSize="13687680" medium="audio" expression="full" duration="14:15"/>
+<media:group>
+<media:description>
+He Jiankui, a Chinese researcher, speaks during the Human Genome Editing Conference in Hong Kong, Wednesday, Nov. 28, 2018. He claims that he helped make the world's first genetically edited babies — twin girls whose DNA he said he altered with a powerful new tool capable of rewriting the very blueprint of life.
+</media:description>
+<media:content url="http://www.abc.net.au/cm/rimage/10569610-16x9-large.jpg?v=4" medium="image" type="image/jpeg"/>
+<media:content url="http://www.abc.net.au/cm/rimage/10569610-4x3-large.jpg?v=4" medium="image" type="image/jpeg"/>
+<media:content url="http://www.abc.net.au/cm/rimage/10569610-3x2-large.jpg?v=4" medium="image" type="image/jpeg"/>
+<media:content url="http://www.abc.net.au/cm/rimage/10569610-3x4-large.jpg?v=4" medium="image" type="image/jpeg"/>
+<media:content url="http://www.abc.net.au/cm/rimage/10569610-1x1-large.jpg?v=4" medium="image" type="image/jpeg"/>
+<media:thumbnail url="http://www.abc.net.au/cm/rimage/10569610-4x3-thumbnail.jpg?v=4"/>
+</media:group>
+</item>
+</channel>
+</rss>
