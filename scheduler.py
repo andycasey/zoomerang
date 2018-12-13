@@ -1,4 +1,6 @@
 
+import os
+import pwd
 import datetime
 
 from googleapiclient.discovery import build
@@ -39,7 +41,12 @@ def find_upcoming_zoomerang_events(calendar, days_ahead=7):
     return zoomerang_events
 
 
-def format_cron_job(zoomerang_event):
+def format_cron_job(zoomerang_event, user=None):
+
+    if user is None:
+        user = pwd.getpwuid(os.getuid())[0]
+
+    dir_path = os.path.dirname(os.path.realpath(__file__))
 
     start_datetime = zoomerang_events[0]["start"]["dateTime"]
     start_datetime = ":".join(start_datetime.split(":")[:-1]) \
@@ -49,20 +56,28 @@ def format_cron_job(zoomerang_event):
 
     st = datetime.datetime.strptime(start_datetime, "%Y-%m-%dT%H:%M:%S%z")
 
-    return f"{st.minute} {st.hour} {st.day} {st.month} * "\
-           f"python /home/ubuntu/zoomerang/zoomerang.py {args} \"{summary}\" "\
-           f">> /home/ubuntu/zoomerang/zoomerang.log 2>&1"
+    return f"{st.minute} {st.hour} {st.day} {st.month} * {user} "\
+           f"python {dir_path}/zoomerang.py {args} \"{summary}\" "\
+           f">> {dir_path}/zoomerang.log 2>&1"
 
+
+def format_cron_jobs(zoomerang_events, environment_variables=("SHELL", "PATH")):
+
+    cron_prefix = "\n".join([f"{ev.upper()}={os.environ.get(ev)}" \
+                             for ev in environment_variables])
+
+    cron_jobs = [format_cron_job(ev) for ev in zoomerang_events]
+
+    return cron_prefix + "\n" + "\n".join(cron_jobs) + "\n"
 
 
 if __name__ == '__main__':
 
     zoomerang_events = find_upcoming_zoomerang_events(get_calendar())
-    cron_prefix = "SHELL=/bin/sh\nPATH=/home/ubuntu/miniconda3/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin\n"
-
-    cron_jobs = "\n".join([format_cron_job(e) for e in zoomerang_events]) + "\n"
+    
+    content = format_cron_jobs(zoomerang_events)
 
     #/etc/cron.d/zoomerang
     with open("/etc/cron.d/zoomerang", "w") as fp:
-        fp.write(cron_prefix + cron_jobs)
+        fp.write(content)
 
