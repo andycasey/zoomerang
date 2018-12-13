@@ -41,7 +41,7 @@ def find_upcoming_zoomerang_events(calendar, days_ahead=7):
         if event.get("location", "").lower().startswith("zoomerang"):
             zoomerang_events.append(event)
 
-    return zoomerang_events
+    return (zoomerang_events, events)
 
 
 def format_cron_job(zoomerang_event, user=None):
@@ -76,20 +76,24 @@ def format_cron_jobs(zoomerang_events, environment_variables=("SHELL", "PATH")):
 
 if __name__ == '__main__':
 
-    zoomerang_events = find_upcoming_zoomerang_events(get_calendar())
+    zoomerang_events, events = find_upcoming_zoomerang_events(get_calendar())
+    print(f"Found {len(zoomerang_events)} upcoming Zoomerang events (o {len(events)})")
 
     content = format_cron_jobs(zoomerang_events)
 
     #/etc/cron.d/zoomerang
     cron_path = "/etc/cron.d/zoomerang"
+    print(f"Writing cron jobs to {cron_path}")
     with open(cron_path, "w") as fp:
         fp.write(content)
 
     # Ensure correct permissions, etc.
-    os.chmod(cron_path, 600)
+    os.chmod(cron_path, 0o600)
     os.chown(cron_path, pwd.getpwnam("root").pw_uid, grp.getgrnam("root").gr_gid)
 
     # Ensure cron jobs will run.
     os.system(f"touch {os.path.dirname(cron_path)}")
     os.system("sudo service cron restart")
 
+    print("Scheduler done")
+    

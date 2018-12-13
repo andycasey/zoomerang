@@ -14,4 +14,12 @@ sudo chown -R ubuntu:ubuntu /var/www/html/
 sudo dpkg-reconfigure tzdata
 
 # Now install crontab for scheduler
-cp zoomerang/scripts/zoomerang-scheduler /etc/cron.d/zoomerang-scheduler
+sudo cp zoomerang/scripts/zoomerangscheduler /etc/cron.d/zoomerangscheduler
+
+sudo chmod 600 /etc/cron.d/zoomerangscheduler
+sudo chown root:root /etc/cron.d/zoomerangscheduler
+touch /etc/cron.d/
+sudo service cron restart
+
+# check status 
+/etc/init.d/cron status
