@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+<channel>
+<title>{podcast_title}</title>
+<link>{podcast_url}<link>
+<language>en-us</language>
+<itunes:subtitle>{podcast_subtitle}</itunes:subtitle>
+<itunes:author>{podcast_author}</itunes:author>
+<itunes:summary>{podcast_summary}</itunes:summary>
+<description>{podcast_description}</description>
+<itunes:owner>
+    <itunes:name>Andy Casey</itunes:name>
+    <itunes:email>andrew.casey@monash.edu</itunes:email>
+</itunes:owner>
+<itunes:explicit>no</itunes:explicit>
+
+<!--REPEAT THIS BLOCK FOR EACH EPISODE-->
+<item>
+    <title>Title of Podcast Episode</title>
+    <itunes:summary>Description of podcast episode content</itunes:summary>
+    <description>Description of podcast episode content</description>
+    <link>http://example.com/podcast-1</link>
+    <enclosure url="http://example.com/podcast-1/podcast.mp3" type="audio/mpeg" length="1024"></enclosure>
+    <pubDate>Thu, 21 Dec 2016 16:01:07 +0000</pubDate>
+    <itunes:author>Author Name</itunes:author>
+    <itunes:duration>00:32:16</itunes:duration>
+    <itunes:explicit>no</itunes:explicit>
+    <guid>http://example.com/podcast-1</guid>
+</item> 
+<!--END REPEAT--> 
+   
+</channel>
+</rss>
