@@ -7,6 +7,7 @@ import datetime
 import os
 import requests
 import yaml
+from glob import glob
 from time import sleep
 from twilio.rest import Client
 
@@ -104,7 +105,7 @@ if __name__ == "__main__":
     os.makedirs(recordings_dir_path, exist_ok=True)
 
     now = datetime.datetime.now().isoformat()
-    output_prefix = os.path.join(recordings_dir_path, f"{args.meeting_id}-{now}")
+    output_prefix = os.path.join(recordings_dir_path, f"{now}-{args.meeting_id}")
 
     # Get the URL of the recording for the given meeting.
     print(f"Recording meeting ID {args.meeting_id} (tel: {args.phone_number} "\
@@ -143,5 +144,91 @@ if __name__ == "__main__":
     # TODO
     print(meta)
 
-    print("Complete:")
+    rss_content = """
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/" version="2.0">
+<channel>
+<atom:link href="http://www.abc.net.au/radio/programs/the-signal/feed/9443166/podcast.xml" rel="self" type="application/xml"/>
+<title>Zoomerang</title>
+<itunes:subtitle>Sleep is important. So is work.</itunes:subtitle>
+<description>
+<![CDATA[
+Your sleep is important, and Australia's time zone sucks. Zoomerang records the scheduled telecons that you slept through.
+]]>
+</description>
+<link>http://115.146.92.32/</link>
+<copyright></copyright>
+<language>en</language>
+<image>
+<title>Zoomerang</title>
+<url>http://www.abc.net.au/cm/rimage/9446470-1x1-thumbnail.jpg?v=4</url>
+<link>http://115.146.92.32/</link>
+</image>
+<itunes:image href="http://www.abc.net.au/cm/rimage/9446470-1x1-large.jpg?v=4"/>
+<itunes:author>Andy Casey</itunes:author>
+<itunes:owner>
+<itunes:name>Andy Casey</itunes:name>
+<itunes:email>andrew.casey@monash.edu</itunes:email>
+</itunes:owner>
+<itunes:summary>
+Your sleep is important, and Australia's time zone sucks. Zoomerang records the scheduled telecons that you slept through.
+</itunes:summary>
+<programarid>ppmp2NQN7y</programarid>
+<itunes:category text="News & Politics"/>
+<itunes:explicit>no</itunes:explicit>
+<lastBuildDate>Fri, 07 Dec 2018 04:00:00 +1100</lastBuildDate>"""
+    
+    rss_item_template = """
+<item>
+<title>{title}</title>
+<itunes:subtitle>
+{subtitle}
+</itunes:subtitle>
+<description>
+<![CDATA[
+{description}
+]]>
+</description>
+<link>
+{link}
+</link>
+<enclosure url="{audio_url}" type="audio/mp3" length="{audio_file_size}"/>
+<pubDate>{publication_date}</pubDate>
+<guid isPermaLink="true">
+{link}
+</guid>
+<itunes:duration>{duration}</itunes:duration>
+<itunes:keywords></itunes:keywords>
+<media:content url="{audio_url}" type="audio/mp3" fileSize="{audio_file_size}" medium="audio" expression="full" duration="{duration}"/>
+<media:group>
+<media:description>
+{media_description}
+</media:description>
+</media:group>
+</item>"""
+
+    metadata_paths = glob(f"{recordings_dir_path}*.yaml")
+
+    url = config["zoomerang_url"]
+
+    for metadata_path in metadata_paths:
+        with open(metadata_path, "r") as fp:
+            meta = yaml.load(fp)
+
+        basename = os.path.basename(meta["audio_path"])
+        rss_content += rss_item_template.format(title=meta["summary"],
+                                                subtitle="",
+                                                description="",
+                                                publication_date=meta["start_datetime"],
+                                                link=f"{url}",
+                                                audio_url="{url}/recordings/{basename}",
+                                                audio_file_size=os.path.getsize(meta["audio_path"]),
+                                                duration="{0}:{1}".format(meta["duration"]/60, meta["duration"] % 60),
+                                                media_description="")
+
+    rss_content += "</channel></rss>"
+
+    with open("/var/www/html/podcast.xml", "w") as fp:
+        fp.write(rss_content)
+
+    print("Updated podcast")
 
