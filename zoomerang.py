@@ -3,11 +3,7 @@
 Make an audio recording of a Zoom meeting.
 """
 
-# Additional steps:
-# 0. Get meeting information from Calendar?
-# 1. Put the recording to a new podcast RSS feed?
-# 2. Notify upon failure?
-
+import datetime
 import os
 import requests
 import yaml
@@ -31,7 +27,7 @@ def record_zoom_meeting(meeting_id, meeting_duration=3600, full_output=False):
 
     :param full_output: [optional]
         If `True`, return the URL of the recording, and the call instance, and
-        the recording instance. If `False` then just return the URL of the 
+        the recording instance. If `False` then just return the URL of the
         recording.
 
     :returns:
@@ -47,7 +43,7 @@ def record_zoom_meeting(meeting_id, meeting_duration=3600, full_output=False):
     </Response>
     """.strip()
 
-    call_url = requests.Request("GET", "http://twimlets.com/echo", 
+    call_url = requests.Request("GET", "http://twimlets.com/echo",
                                 params=dict(Twiml=TwiML)).prepare().url
 
     # Call in and record.
@@ -87,7 +83,7 @@ if __name__ == "__main__":
 
     now = datetime.datetime.now().isoformat()
     output_prefix = os.path.join(recordings_dir_path, f"{meeting_id}-{now}")
-    
+
 
     # Get the URL of the recording for the given meeting.
     url, call, recording = record_zoom_meeting(meeting_id, full_output=True)
@@ -100,7 +96,7 @@ if __name__ == "__main__":
     with open(f"{output_prefix}.mp3", "wb") as fp:
         fp.write(r.content)
 
-    meta = dict(meeting_id=meeting_id, 
+    meta = dict(meeting_id=meeting_id,
                 summary=summary,
                 start_datetime=now,
                 audio_path=f"{output_prefix}.mp3")
