@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Response>
+    <Say>I am recording this meeting!</Say>
+    <Pause length="15"/>
+    <Say>Meeting complete</Say>
+    <Hangup/>
+</Response>
