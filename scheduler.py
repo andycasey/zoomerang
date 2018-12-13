@@ -44,12 +44,14 @@ def format_cron_job(zoomerang_event):
     start_datetime = zoomerang_events[0]["start"]["dateTime"]
     start_datetime = ":".join(start_datetime.split(":")[:-1]) \
                    + start_datetime[-2:]
-    meeting_id = zoomerang_event["location"].split()[1]
-    summary = zoomerang_event.get("summary", f"Meeting {meeting_id}").replace('"', '')
+    args = zoomerang_event["location"].split()[1:]
+    summary = zoomerang_event.get("summary", "").replace('"', '')
 
     st = datetime.datetime.strptime(start_datetime, "%Y-%m-%dT%H:%M:%S%z")
 
-    return f"{st.minute} {st.hour} {st.day} {st.month} * python /home/ubuntu/zoomerang/zoomerang.py {meeting_id} \"{summary}\" >> /home/ubuntu/zoomerang/zoomerang.log 2>&1"
+    return f"{st.minute} {st.hour} {st.day} {st.month} * "\
+           f"python /home/ubuntu/zoomerang/zoomerang.py {args} \"{summary}\" "\
+           f">> /home/ubuntu/zoomerang/zoomerang.log 2>&1"
 
 
 
