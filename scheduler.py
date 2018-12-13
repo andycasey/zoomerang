@@ -79,7 +79,7 @@ if __name__ == '__main__':
     zoomerang_events, events = find_upcoming_zoomerang_events(get_calendar())
     print(f"Found {len(zoomerang_events)} upcoming Zoomerang events (o {len(events)})")
 
-    content = format_cron_jobs(zoomerang_events)
+    content = format_cron_jobs(zoomerang_events, user="ubuntu")
 
     #/etc/cron.d/zoomerang
     cron_path = "/etc/cron.d/zoomerang"

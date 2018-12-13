@@ -124,23 +124,24 @@ if __name__ == "__main__":
     now = datetime.datetime.now().isoformat()
     output_prefix = os.path.join(recordings_dir_path, f"{now}-{args.meeting_id}")
 
-    print(f"Recording meeting ID {args.meeting_id} (tel: {args.phone_number} "\
-          f"for up to {args.duration} minutes)")
+    if args.meeting_id > 0:
+        print(f"Recording meeting ID {args.meeting_id} (tel: {args.phone_number} "\
+              f"for up to {args.duration} minutes)")
 
-    # Get the URL of the recording for the given meeting.
-    meeting = record_meeting(config["twilio_account_sid"], 
-                             config["twilio_auth_token"],
-                             config["twilio_phone_number"],
-                             args.meeting_id,
-                             conference_phone_number=args.phone_number,
-                             duration=60 * args.duration,
-                             summary=args.summary)
+        # Get the URL of the recording for the given meeting.
+        meeting = record_meeting(config["twilio_account_sid"], 
+                                 config["twilio_auth_token"],
+                                 config["twilio_phone_number"],
+                                 args.meeting_id,
+                                 conference_phone_number=args.phone_number,
+                                 duration=60 * args.duration,
+                                 summary=args.summary)
 
-    print(f"Call complete. Response: {meeting}")
+        print(f"Call complete. Response: {meeting}")
 
-    # Save the meeting details.
-    with open(f"{output_prefix}.yaml", "w") as fp:
-        fp.write(yaml.dump(meeting))
+        # Save the meeting details.
+        with open(f"{output_prefix}.yaml", "w") as fp:
+            fp.write(yaml.dump(meeting))
 
     # Update podcast.
     podcast = Podcast(name="Zoomerang",
@@ -162,7 +163,7 @@ if __name__ == "__main__":
             publication_date=dateutil.parser.parse(meeting["created_datetime"])))
 
     with open(config["zoomerang_podcast_path"], "w") as fp:
-        fp.write(podcast)
+        fp.write(f"{podcast}")
 
     print("Updated podcast.")
 
