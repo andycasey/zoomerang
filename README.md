@@ -1,15 +1,12 @@
 zoomerang
 =========
 
-Because sleep is important and Australia's time zone **sucks**.
-
-
-TL;DR
------
-
 Zoomerang looks through your Google Calendar for upcoming telecons that you
 want to record. Then it posts the recording to a private podcast that your 
-device is subscribed to. You're welcome.
+device is subscribed to. 
+
+Why? Because sleep is important and Australia's time zone *sucks*.
+
 
 Part I: The Scheduler
 ---------------------
