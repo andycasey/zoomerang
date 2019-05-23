@@ -64,12 +64,12 @@ def format_cron_job(zoomerang_event, user=None):
            f">> {dir_path}/zoomerang.log 2>&1"
 
 
-def format_cron_jobs(zoomerang_events, environment_variables=("SHELL", "PATH")):
+def format_cron_jobs(zoomerang_events, user=None, environment_variables=("SHELL", "PATH")):
 
     cron_prefix = "\n".join([f"{ev.upper()}={os.environ.get(ev)}" \
                              for ev in environment_variables])
 
-    cron_jobs = [format_cron_job(ev) for ev in zoomerang_events]
+    cron_jobs = [format_cron_job(ev, user) for ev in zoomerang_events]
 
     return cron_prefix + "\n\n" + "\n".join(cron_jobs) + "\n\n"
 
